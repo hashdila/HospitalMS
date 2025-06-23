@@ -12,11 +12,16 @@ def book_appointment(patient_id):
         print("Doctors list not found.")
         return
 
-    # Display doctors
+    # Display doctors in a clean table
     print("\n--- Available Doctors ---")
+    print(f"{'No':<4}{'Doctor Name':<25}{'Specialty':<20}{'Doctor ID':<10}")
+    print("-" * 60)
     for idx, doc in enumerate(doctors, 1):
-        doc_id, name, specialty = doc
-        print(f"{idx}. {name} ({specialty}) — ID: {doc_id}")
+        if len(doc) >= 4:
+            doc_id, name, _, specialty = doc  # includes password
+        else:
+            doc_id, name, specialty = doc
+        print(f"{idx:<4}{name:<25}{specialty:<20}{doc_id:<10}")
 
     try:
         doc_choice = int(input("Select a doctor by number: "))
@@ -104,6 +109,44 @@ def view_all_appointments():
 
     except FileNotFoundError:
         print("Appointment or doctor data not found.")
+
+
+
+def view_patient_appointments(patient_id):
+    try:
+        # Load doctor info into a dictionary
+        doctor_info = {}
+        with open("doctors.txt", "r") as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if len(parts) >= 4:
+                    doc_id, name, _, specialty = parts
+                else:
+                    doc_id, name, specialty = parts
+                doctor_info[doc_id] = (name, specialty)
+
+        # Collect patient's appointments
+        appointments = []
+        with open("appointments.txt", "r") as f:
+            for line in f:
+                appt_id, pat_id, doc_id, date, time = line.strip().split(',')
+                if pat_id == patient_id:
+                    name, specialty = doctor_info.get(doc_id, ("Unknown", "Unknown"))
+                    appointments.append((date, time, name, specialty, appt_id))
+
+        # Display appointments
+        if appointments:
+            print("\n--- Your Appointments ---")
+            print(f"{'Date':<12} {'Time':<8} {'Doctor':<25} {'Specialty':<15} {'Appt ID':<10}")
+            print("-" * 75)
+            for date, time, name, specialty, appt_id in sorted(appointments):
+                print(f"{date:<12} {time:<8} {name:<25} {specialty:<15} {appt_id:<10}")
+        else:
+            print("\nYou have no upcoming appointments.")
+
+    except FileNotFoundError:
+        print("Required files (appointments or doctors) not found.")
+
 
 def cancel_appointment():
     appt_id = input("Enter appointment ID to cancel: ")

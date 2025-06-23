@@ -1,1 +1,2 @@
-DOC2629,dilan nawarathna,sycology2
+DOC4814,samira,Neurologist
+DOC1307,Samira Kumar,Neurologist
