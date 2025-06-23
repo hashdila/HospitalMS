@@ -1,3 +1,6 @@
+from appointment import view_doctor_appointments
+
+
 def register_doctor():
     print("\n--- Doctor Registration ---")
     name = input("Enter doctor's full name: ")
@@ -40,3 +43,17 @@ def register_doctor():
     print(f"ID: {doc_id}")
     print(f"Name: {name}")
     print(f"Specialty: {specialty}")
+
+def doctor_menu(doctor_id):
+    while True:
+        print("\n--- Doctor Dashboard ---")
+        print("1. View My Appointments")
+        print("2. Logout")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            view_doctor_appointments(doctor_id)
+        elif choice == '2':
+            break
+        else:
+            print("Invalid choice. Try again.")

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 def book_appointment(patient_id):
@@ -82,14 +83,44 @@ def book_appointment(patient_id):
     print(f"✅ Appointment booked successfully for {selected_date} at {selected_time}.")
 
 
-from collections import defaultdict
+# def view_all_appointments():
+#     try:
+#         # Load doctors into a dictionary for reference
+#         doctor_info = {}
+#         with open("doctors.txt", "r") as f:
+#             for line in f:
+#                 doc_id, name, specialty = line.strip().split(',')
+#                 doctor_info[doc_id] = f"{name} ({specialty})"
+#
+#         # Group appointments by doctor
+#         appointments_by_doctor = defaultdict(list)
+#         with open("appointments.txt", "r") as f:
+#             for line in f:
+#                 appt_id, patient_id, doc_id, date, time = line.strip().split(',')
+#                 appointments_by_doctor[doc_id].append((appt_id, patient_id, date, time))
+#
+#         # Display grouped output
+#         print("\n--- All Appointments by Doctor ---")
+#         for doc_id, appointments in appointments_by_doctor.items():
+#             print(f"\nDoctor: {doctor_info.get(doc_id, doc_id)}")
+#             for appt in appointments:
+#                 appt_id, patient_id, date, time = appt
+#                 print(f"  • {date} at {time} — Patient ID: {patient_id} (Appointment ID: {appt_id})")
+#
+#     except FileNotFoundError:
+#         print("Appointment or doctor data not found.")
+
 def view_all_appointments():
     try:
         # Load doctors into a dictionary for reference
         doctor_info = {}
         with open("doctors.txt", "r") as f:
             for line in f:
-                doc_id, name, specialty = line.strip().split(',')
+                parts = line.strip().split(',')
+                if len(parts) < 3:
+                    print(f"Skipping invalid doctor line: {line.strip()}")
+                    continue
+                doc_id, name, specialty = parts[0], parts[1], parts[2]
                 doctor_info[doc_id] = f"{name} ({specialty})"
 
         # Group appointments by doctor
@@ -109,8 +140,6 @@ def view_all_appointments():
 
     except FileNotFoundError:
         print("Appointment or doctor data not found.")
-
-
 
 def view_patient_appointments(patient_id):
     try:
@@ -160,3 +189,38 @@ def cancel_appointment():
         print("Appointment cancelled.")
     except FileNotFoundError:
         print("Appointments file not found.")
+
+def view_doctor_appointments(doctor_id):
+    try:
+        # Read all appointments for the logged-in doctor
+        with open("appointments.txt", "r") as f:
+            appointments = []
+            for line in f:
+                appt_id, pat_id, doc_id, date, time = line.strip().split(',')
+                if doc_id == doctor_id:
+                    appointments.append((date, time, pat_id, appt_id))
+
+        if not appointments:
+            print("\nNo appointments found.")
+            return
+
+        # Sort by date then time
+        appointments.sort(key=lambda x: (x[0], x[1]))
+
+        # Group by date
+        grouped = defaultdict(list)
+        for appt in appointments:
+            date, time, patient_id, appt_id = appt
+            grouped[date].append((time, patient_id, appt_id))
+
+        # Display nicely
+        print("\n--- Your Appointments (Grouped by Date) ---")
+        for date in sorted(grouped.keys()):
+            print(f"\n📅 {date}")
+            print(f"{'Time':<10}{'Patient ID':<15}{'Appointment ID':<15}")
+            print("-" * 40)
+            for time, patient_id, appt_id in sorted(grouped[date]):
+                print(f"{time:<10}{patient_id:<15}{appt_id:<15}")
+
+    except FileNotFoundError:
+        print("appointments.txt not found.")

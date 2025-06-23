@@ -5,14 +5,24 @@ def login(user_type):
     try:
         with open(user_file, "r") as f:
             for line in f:
-                uid, name, pwd = line.strip().split(',')
-                if username == name and password == pwd:
-                    print(f"{user_type.title()} login successful!")
-                    return uid
+                parts = line.strip().split(',')
+                if user_type == "doctor":
+                    if len(parts) >= 4:
+                        uid, name, pwd, _ = parts
+                        if username == name and password == pwd:
+                            print(f"{user_type.title()} login successful!")
+                            return uid
+                else:
+                    if len(parts) >= 3:
+                        uid, name, pwd = parts
+                        if username == name and password == pwd:
+                            print(f"{user_type.title()} login successful!")
+                            return uid
     except FileNotFoundError:
         print(f"{user_file} not found.")
     print("Login failed.")
     return None
+
 
 def register_patient():
     name = input("Enter full name: ")
