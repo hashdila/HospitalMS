@@ -57,3 +57,48 @@ def doctor_menu(doctor_id):
             break
         else:
             print("Invalid choice. Try again.")
+
+
+def view_all_doctors():
+    try:
+        print("\n--- All Registered Doctors ---")
+        with open("doctors.txt", "r") as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if len(parts) >= 3:
+                    doc_id, name, specialty = parts[0], parts[1], parts[2]
+                    print(f"ID: {doc_id} | Name: {name} | Specialty: {specialty}")
+    except FileNotFoundError:
+        print("No doctors found.")
+
+
+def delete_doctor():
+    try:
+        # Step 1: Read and show all doctors
+        doctors = []
+        print("\n--- All Registered Doctors ---")
+        with open("doctors.txt", "r") as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if len(parts) >= 3:
+                    doc_id, name, specialty = parts[0], parts[1], parts[2]
+                    print(f"ID: {doc_id} | Name: {name} | Specialty: {specialty}")
+                    doctors.append((doc_id, name, specialty, line))
+
+        # Step 2: Ask for ID to delete
+        doctor_id = input("\nEnter the Doctor ID you want to delete: ")
+
+        # Step 3: Filter out the doctor
+        updated_lines = [d[3] for d in doctors if d[0] != doctor_id]
+        if len(updated_lines) == len(doctors):
+            print(f"No doctor found with ID {doctor_id}.")
+            return
+
+        # Step 4: Write updated list back to file
+        with open("doctors.txt", "w") as f:
+            f.writelines(updated_lines)
+
+        print(f"Doctor with ID {doctor_id} has been successfully deleted.")
+
+    except FileNotFoundError:
+        print("Doctor file not found.")
