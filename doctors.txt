@@ -1,3 +1,2 @@
-DOC1307,Samira Kumar,2,Neurologist
 DOC7888,Amila,1,Cardiologist
 DOC1733,Sahan,12,Orthopedic

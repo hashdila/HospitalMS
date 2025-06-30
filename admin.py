@@ -13,6 +13,7 @@ def admin_menu(admin_id):
         print("6. Logout")
         choice = input("Enter your choice: ")
 
+
         if choice == '1':
             view_all_appointments()
         elif choice == '2':

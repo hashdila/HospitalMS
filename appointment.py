@@ -83,32 +83,6 @@ def book_appointment(patient_id):
     print(f"✅ Appointment booked successfully for {selected_date} at {selected_time}.")
 
 
-# def view_all_appointments():
-#     try:
-#         # Load doctors into a dictionary for reference
-#         doctor_info = {}
-#         with open("doctors.txt", "r") as f:
-#             for line in f:
-#                 doc_id, name, specialty = line.strip().split(',')
-#                 doctor_info[doc_id] = f"{name} ({specialty})"
-#
-#         # Group appointments by doctor
-#         appointments_by_doctor = defaultdict(list)
-#         with open("appointments.txt", "r") as f:
-#             for line in f:
-#                 appt_id, patient_id, doc_id, date, time = line.strip().split(',')
-#                 appointments_by_doctor[doc_id].append((appt_id, patient_id, date, time))
-#
-#         # Display grouped output
-#         print("\n--- All Appointments by Doctor ---")
-#         for doc_id, appointments in appointments_by_doctor.items():
-#             print(f"\nDoctor: {doctor_info.get(doc_id, doc_id)}")
-#             for appt in appointments:
-#                 appt_id, patient_id, date, time = appt
-#                 print(f"  • {date} at {time} — Patient ID: {patient_id} (Appointment ID: {appt_id})")
-#
-#     except FileNotFoundError:
-#         print("Appointment or doctor data not found.")
 
 def view_all_appointments():
     try:
